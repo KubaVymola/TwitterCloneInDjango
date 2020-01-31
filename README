@@ -1,0 +1,3 @@
+Simple project to make a clone of Twitter and make the use of Django back-end providing rendering and REST API and vanilla JavaScript front-end utilizing some AJAX calls to the API to asynchronously load tweets.
+
+First, start with running ./install-dependencies to install all the required npm and pip tools for the project
