@@ -1,15 +1,18 @@
-gulp = require('gulp');
-gulpIf = require('gulp-if');
-inlineSource = require('gulp-inline-source');
-rename = require('gulp-rename');
+const gulp = require('gulp');
+const gulpIf = require('gulp-if');
+const inlineSource = require('gulp-inline-source');
+const rename = require('gulp-rename');
+const exec = require('child_process').exec;
+
+const appName = 'twitter';
 
 
-gulp.task('media', function() { 
+gulp.task('images', function() { 
 	imagemin = require('gulp-imagemin');
 
 	return gulp.src('./src/images/*')
 		.pipe(imagemin())
-		.pipe(gulp.dest('./dist/images/'));
+		.pipe(gulp.dest(`./src/${ appName }/static/images/`));
 
 });
 
@@ -23,7 +26,7 @@ gulp.task('js', function() {
 		.pipe(concat('main.js', { newLine: '\r\n' }))
 		.pipe(babel( { presets: ['@babel/env'] } ))
 		.pipe(uglify())
-		.pipe(gulp.dest('./dist/js/'));
+		.pipe(gulp.dest(`./src/${ appName }/static/js/`));
 });
 
 
@@ -45,9 +48,36 @@ gulp.task('css', function() {
 		.pipe(concat('style.css'))
 		.pipe(cleancss( { compatibility: 'ie10' } ))
 		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('./dist/style/'));
-
+		.pipe(gulp.dest(`./src/${ appName }/static/style/`));
 });
 
 
-gulp.task('default', gulp.parallel('media', 'js', 'css'));
+gulp.task('default', gulp.parallel('images', 'js', 'css'));
+
+
+/*gulp.task('update', function(cb) {
+	exec(`python src/${ appName}/manage.py collectstatic --noinput`);
+});
+
+gulp.task('runserver', function(cb) {
+	console.log('Starting python server');
+
+	var proc = exec(`python src/${ appName }/manage.py runserver &`);
+});
+
+gulp.task('sync', function() {
+	browserSync.init( {
+		notify: true,
+		port: 8000,
+		proxy: 'localhost:8000'
+	});
+
+	// console.log('Server is running...');
+}); */
+
+gulp.task('watch', function() {
+	gulp.watch('src/js/*.js', gulp.series('js'));
+	gulp.watch('src/style/*.css', gulp.series('css'));
+
+	return;
+});

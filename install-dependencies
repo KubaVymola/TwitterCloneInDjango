@@ -6,3 +6,6 @@ python3 -m venv src/venv
 pip3 install -r requirements.txt
 
 npm install
+
+gulp
+python src/twitter/manage.py collectstatic
