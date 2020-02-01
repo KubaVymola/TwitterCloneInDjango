@@ -1,7 +1,24 @@
 {% extends 'base.html' %}
 
-{% block title %}My awesome site{% endblock %}
+{% block title %}Landing page{% endblock %}
 
 {% block content %}
-    <h1>Hello world</h1>
+
+    <ul>
+        <li><a href="{% url 'twitter_main:index' %}">Main page</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'twitter_main:special' %}">Special</a></li>
+        <li><a href="{% url 'twitter_main:user_logout' %}">Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'twitter_main:register' %}">Register</a></li>
+        <li><a href="{% url 'twitter_main:user_login' %}">Login</a></li>
+        {% endif %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        <h1>Hello user {{ user.username }}</h1>
+    {% else %}
+        <h1>You are not logged in</h1>
+    {% endif %}
+
 {% endblock%}
