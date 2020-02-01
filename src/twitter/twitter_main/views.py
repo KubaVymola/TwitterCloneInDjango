@@ -1,4 +1,5 @@
 from .forms import UserForm, UserInfoForm
+from .models import UserInfo
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -10,7 +11,11 @@ def index(request):
 
 @login_required
 def special(request):
-    return HttpResponse("You are logged in, user {}".format(request.user.UserInfo.about))
+
+    user_info = UserInfo.objects.get(user=request.user)
+
+    return HttpResponse("You are logged in, user {}<br>Your about is: {}<br><a href='{}'>Back</a>"
+        .format(request.user.username, user_info.about, reverse('twitter_main:index')))
 
 @login_required
 def user_logout(request):

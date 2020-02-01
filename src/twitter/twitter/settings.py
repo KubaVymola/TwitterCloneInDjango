@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_DIR = os.path.join(BASE_DIR, '../../dist')
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
 
@@ -124,12 +124,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 
+#For server
 LOGIN_URL = '/user_login'
 
 STATIC_URL = '/static/'
 
+
+# For collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 STATICFILES_DIRS = [
     STATIC_DIR
 ]
+
+MEDIA_ROOT = MEDIA_DIR
+MEDIA_URL = '/media/'
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
