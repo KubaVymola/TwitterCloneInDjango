@@ -28,8 +28,7 @@ gulp.task('js', function() {
 		.pipe(babel( { presets: ['@babel/env'] } ))
 		.pipe(uglify())
 		.pipe(gulp.dest(`${ destinationDir }js/`));
-	
-	
+
 });
 
 
@@ -47,8 +46,8 @@ gulp.task('css', function() {
 
  	return gulp.src('./src/style/*.css')
 		.pipe(sourcemaps.init())
-		.pipe(autoprefixer())
 		.pipe(concat('style.css'))
+		.pipe(autoprefixer())
 		.pipe(cleancss( { compatibility: 'ie10' } ))
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest(`${ destinationDir }style/`));
@@ -57,12 +56,6 @@ gulp.task('css', function() {
 
 gulp.task('default', gulp.parallel('images', 'js', 'css'));
 
-gulp.task('collectStatic', function() {
-	return gulp.src('dist/**/*.*')
-		.pipe(shell([
-			`python src/${ appName }/manage.py collectstatic --noinput`
-		]));
-});
 
 gulp.task('watch', function() {
 	browserSync = require('browser-sync')
@@ -76,4 +69,5 @@ gulp.task('watch', function() {
 	gulp.watch('src/style/*.css', gulp.series('css'));
 
 	gulp.watch(['./dist/**/*.{css,html,js,py}']).on('change', browserSync.reload);
+	gulp.watch(['./src/**/*.{html,py}']).on('change', browserSync.reload);
 });
