@@ -2,9 +2,10 @@ const gulp = require('gulp');
 const gulpIf = require('gulp-if');
 const inlineSource = require('gulp-inline-source');
 const rename = require('gulp-rename');
-const exec = require('child_process').exec;
+const shell = require('gulp-shell');
 
 const appName = 'twitter';
+const destinationDir = './dist/';
 
 
 gulp.task('images', function() { 
@@ -12,7 +13,7 @@ gulp.task('images', function() {
 
 	return gulp.src('./src/images/*')
 		.pipe(imagemin())
-		.pipe(gulp.dest(`./src/${ appName }/static/images/`));
+		.pipe(gulp.dest(`${ destinationDir }images/`));
 
 });
 
@@ -26,7 +27,9 @@ gulp.task('js', function() {
 		.pipe(concat('main.js', { newLine: '\r\n' }))
 		.pipe(babel( { presets: ['@babel/env'] } ))
 		.pipe(uglify())
-		.pipe(gulp.dest(`./src/${ appName }/static/js/`));
+		.pipe(gulp.dest(`${ destinationDir }js/`));
+	
+	
 });
 
 
@@ -42,42 +45,35 @@ gulp.task('css', function() {
 	const cleancss = require('gulp-clean-css');
 	const postcss = require('gulp-postcss');
 
-	return gulp.src('./src/style/*.css')
+ 	return gulp.src('./src/style/*.css')
 		.pipe(sourcemaps.init())
 		.pipe(autoprefixer())
 		.pipe(concat('style.css'))
 		.pipe(cleancss( { compatibility: 'ie10' } ))
 		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest(`./src/${ appName }/static/style/`));
+		.pipe(gulp.dest(`${ destinationDir }style/`));
 });
 
 
 gulp.task('default', gulp.parallel('images', 'js', 'css'));
 
-
-/*gulp.task('update', function(cb) {
-	exec(`python src/${ appName}/manage.py collectstatic --noinput`);
+gulp.task('collectStatic', function() {
+	return gulp.src('dist/**/*.*')
+		.pipe(shell([
+			`python src/${ appName }/manage.py collectstatic --noinput`
+		]));
 });
-
-gulp.task('runserver', function(cb) {
-	console.log('Starting python server');
-
-	var proc = exec(`python src/${ appName }/manage.py runserver &`);
-});
-
-gulp.task('sync', function() {
-	browserSync.init( {
-		notify: true,
-		port: 8000,
-		proxy: 'localhost:8000'
-	});
-
-	// console.log('Server is running...');
-}); */
 
 gulp.task('watch', function() {
+	browserSync = require('browser-sync')
+
+	browserSync.init({
+        notify: false,
+		proxy: "localhost:8000"
+	});
+	
 	gulp.watch('src/js/*.js', gulp.series('js'));
 	gulp.watch('src/style/*.css', gulp.series('css'));
 
-	return;
+	gulp.watch(['./dist/**/*.{css,html,js,py}']).on('change', browserSync.reload);
 });
