@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
 
 # Application definition
 

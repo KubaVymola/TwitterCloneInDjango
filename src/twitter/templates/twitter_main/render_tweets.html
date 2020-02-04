@@ -1,0 +1,7 @@
+{% for tweet in tweets %}
+    <div style="border:1px solid #aaa; padding: 1rem; margin:0.5rem; border-radius:1rem;">
+        <p>{{ tweet.tweet_text }}</p>
+        <p><em>{{ tweet.author.username }}</em></p>
+        <p><em>{{ tweet.pub_date }}</em></p>
+    </div>
+{% endfor %}

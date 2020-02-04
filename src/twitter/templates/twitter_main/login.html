@@ -2,6 +2,15 @@
 
 {% block content %}
     
+    <ul>
+        <li>
+            <a href="{% url 'twitter_main:user_login' %}">Login</a>
+        </li>
+        <li>
+            <a href="{% url 'twitter_main:register' %}">Register</a>
+        </li>
+    </ul>
+
     <h1>Login here</h1>
 
     <form action="" method="POST" enctype="multipart/form-data">
@@ -11,6 +20,10 @@
 
         <label for="password">Password:</label>
         <input type="password" name="password" placeholder="Enter a password">
+
+        <label for="remember">Remember me:
+            <input type="checkbox" name="remember" value="">
+        </label>
 
         <input type="submit" value="Login" name="">
 

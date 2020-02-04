@@ -2,6 +2,15 @@
 {% load static %}
 
 {% block content %}
+    <ul>
+        <li>
+            <a href="{% url 'twitter_main:user_login' %}">Login</a>
+        </li>
+        <li>
+            <a href="{% url 'twitter_main:register' %}">Register</a>
+        </li>
+    </ul>
+
     {% if registered %}
         <h3>Thank you for registering to our site!</h3>
     {% else %}

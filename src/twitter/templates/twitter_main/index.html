@@ -6,19 +6,80 @@
 
     <ul>
         <li><a href="{% url 'twitter_main:index' %}">Main page</a></li>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'twitter_main:special' %}">Special</a></li>
-        <li><a href="{% url 'twitter_main:user_logout' %}">Logout</a></li>
-        {% else %}
-        <li><a href="{% url 'twitter_main:register' %}">Register</a></li>
-        <li><a href="{% url 'twitter_main:user_login' %}">Login</a></li>
-        {% endif %}
+        <li><a href="{% url 'twitter_main:user_logout' %}">Logout</a></li>        
     </ul>
 
-    {% if user.is_authenticated %}
-        <h1>Hello user {{ user.username }}</h1>
-    {% else %}
-        <h1>You are not logged in</h1>
-    {% endif %}
+    <h1>Hello user {{ user.username }}</h1>
+    
+    {% include 'twitter_main/post_tweet.html' %}
 
+    <main id="tweets">
+        
+    </main>
+
+    <script>
+        const host  = 'localhost:8000/';
+        const token = '{{ csrf_token }}';
+
+        const tweetContainer = document.querySelector('#tweets');
+        const tweetForm = document.querySelector('#tweet_form');
+        const tweetTextInput = document.querySelector('#id_tweet_text');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            getData('get_tweets/2');
+        })
+
+        async function getData(resource) {
+            
+            const response = await fetch(`${ host }${ resource }`, {
+                method: 'GET',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                return tweetContainer.innerHTML = data;
+            })
+        }
+
+
+        tweetForm.addEventListener('submit', (event) => { 
+            event.preventDefault();
+            postNewTweet('new_tweet/'); //.then(function(res) { console.log(res); });
+            getData('get_tweets/');
+        });
+
+        async function postNewTweet(resource) {
+
+            const response = await fetch(`${ host }${ resource }`, {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    "X-CSRFToken": token 
+                },
+                body: JSON.stringify( { body: tweetTextInput.value } )
+
+            })
+            .then((djangoRes) => {
+                return djangoRes.text();
+            })
+            .then((data) => {
+                return data;
+            })
+
+            console.log(response);
+            return response;
+        }
+    </script>
 {% endblock%}

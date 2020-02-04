@@ -1,5 +1,5 @@
 from django import forms
-from .models import UserInfo
+from .models import UserInfo, Tweet
 from django.contrib.auth.models import User
 
 class UserForm(forms.ModelForm):
@@ -12,3 +12,10 @@ class UserInfoForm(forms.ModelForm):
     class Meta():
         model = UserInfo
         fields = ( 'about', 'profile_pic' )
+
+class NewTweetForm(forms.ModelForm):
+    # tweet_text = forms.CharField(max_length=280, widget=forms.TextInput )
+
+    class Meta():
+        model = Tweet
+        fields = ( 'tweet_text', )

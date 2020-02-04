@@ -1,21 +1,19 @@
-from .forms import UserForm, UserInfoForm
-from .models import UserInfo
+from .forms import UserForm, UserInfoForm, NewTweetForm
+from .models import UserInfo, Tweet
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-def index(request):
-    return render(request, 'twitter_main/index.html')
+import json
 
 @login_required
-def special(request):
+def index(request):
+    tweet_form = NewTweetForm()
 
-    user_info = UserInfo.objects.get(user=request.user)
+    return render(request, 'twitter_main/index.html', { 'tweet_form': tweet_form })
 
-    return HttpResponse("You are logged in, user {}<br>Your about is: {}<br><a href='{}'>Back</a>"
-        .format(request.user.username, user_info.about, reverse('twitter_main:index')))
 
 @login_required
 def user_logout(request):
@@ -57,6 +55,7 @@ def user_login(request):
     
     username = request.POST['username']
     password = request.POST['password']
+
     user = authenticate(request, username=username, password=password)
 
     if not user:
@@ -67,7 +66,39 @@ def user_login(request):
     
     login(request, user)
 
+
+    request.session.set_expiry(0)
+    if 'remember' in request.POST:
+        request.session.set_expiry(60 * 60 * 24 * 30)
+
     if 'next' in request.GET:
         return HttpResponseRedirect(request.GET['next'])
     
     return HttpResponseRedirect(reverse('twitter_main:index'))
+
+
+# @login_required
+def get_tweets(request, amount=''):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden('You must be logged in to see the Tweets')
+
+    if not amount:
+        tweets = Tweet.objects.all().order_by('-pub_date')
+    else:
+        tweets = Tweet.objects.all().order_by('-pub_date')[:amount]
+
+    return render(request, 'twitter_main/render_tweets.html', { 'tweets': tweets })
+
+
+def post_tweet(request):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden('You must be logged in to post tweets')
+    
+    if request.method != 'POST':
+        return HttpResponse('Use POST to Post tweet!')
+
+    request_data = json.loads(request.body) #.decode('utf-8')
+    new_tweet = Tweet(tweet_text=request_data['body'], author=request.user)
+    new_tweet.save()
+
+    return HttpResponse('Saved tweet')

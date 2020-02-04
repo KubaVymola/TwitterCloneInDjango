@@ -1,0 +1,8 @@
+<hr>
+<h3>New Tweet</h3>
+<form action="" method='POST' id="tweet_form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ tweet_form.as_p }}
+    <input type="submit" value="Tweet">
+</form>
+<hr>
