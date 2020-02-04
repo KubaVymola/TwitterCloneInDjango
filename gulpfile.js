@@ -40,13 +40,14 @@ gulp.task('css', function() {
 	const concat = require('gulp-concat');
 	const autoprefixer = require('gulp-autoprefixer');
 	const sourcemaps = require('gulp-sourcemaps');
-	// const sass = require('gulp-sass');
+	const sass = require('gulp-sass');
 	const cleancss = require('gulp-clean-css');
 	const postcss = require('gulp-postcss');
 
- 	return gulp.src('./src/style/*.css')
+ 	return gulp.src('./src/style/**/*.scss')
 		.pipe(sourcemaps.init())
-		.pipe(concat('style.css'))
+		//.pipe(concat('style.css'))
+		.pipe(sass().on('error', sass.logError))
 		.pipe(autoprefixer())
 		.pipe(cleancss( { compatibility: 'ie10' } ))
 		.pipe(sourcemaps.write('.'))
@@ -66,7 +67,7 @@ gulp.task('watch', function() {
 	});
 	
 	gulp.watch('src/js/*.js', gulp.series('js'));
-	gulp.watch('src/style/*.css', gulp.series('css'));
+	gulp.watch('src/style/*.{scss,css}', gulp.series('css'));
 
 	gulp.watch(['./dist/**/*.{css,html,js,py}']).on('change', browserSync.reload);
 	gulp.watch(['./src/**/*.{html,py}']).on('change', browserSync.reload);

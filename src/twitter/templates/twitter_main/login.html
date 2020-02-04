@@ -2,14 +2,7 @@
 
 {% block content %}
     
-    <ul>
-        <li>
-            <a href="{% url 'twitter_main:user_login' %}">Login</a>
-        </li>
-        <li>
-            <a href="{% url 'twitter_main:register' %}">Register</a>
-        </li>
-    </ul>
+    {% include 'twitter_main/login_nav.html' %}
 
     <h1>Login here</h1>
 

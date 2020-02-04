@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400&display=swap');
+
+@import 'normalize';
+@import 'reset.local';
+@import 'color';
+
+html {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+* {
+    color: $primary-color;
+}
+
+body {
+    background-color: $background-color;
+}
+
+h1, h2, h3, h4, h5 {
+    font-size: 1.8rem;
+    font-weight: 300;
+}
+
+nav {
+    position: relative;
+    width: 100%;
+
+    padding: 1rem 3rem;
+
+    border-bottom: 1px solid #cccccc;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-item {
+    display: inline-block;
+    margin: 0rem 1rem
+}
+
+
+.wrapper {
+    width:100%;
+    max-width: 1000px;
+
+    margin: 0 auto;
+}
+
+.p-3 {
+    padding: 3rem;
+}
+
+.tweet-form {
+    border-bottom: 1px;
+    border-left: 0px;
+    border-right: 0px;
+    border-top: 1px;
+    border-color: #cccccc;
+    border-style: solid;
+
+    padding: 1rem 0;
+}
+
+.tweet-form > * {
+    margin: 0.8rem 0rem 0.5rem 0;
+}
+
+.tweet-form > input[type=submit] {
+    margin-top: 0.5rem;
+}

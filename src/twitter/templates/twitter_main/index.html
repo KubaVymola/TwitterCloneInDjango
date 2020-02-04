@@ -4,18 +4,20 @@
 
 {% block content %}
 
-    <ul>
-        <li><a href="{% url 'twitter_main:index' %}">Main page</a></li>
-        <li><a href="{% url 'twitter_main:user_logout' %}">Logout</a></li>        
-    </ul>
+    {% include 'twitter_main/logout_nav.html' %}
 
-    <h1>Hello user {{ user.username }}</h1>
-    
-    {% include 'twitter_main/post_tweet.html' %}
-
-    <main id="tweets">
+    <div class="wrapper p-3">
+        <h1>Hello user {{ user.username }}</h1>
         
-    </main>
+        {% include 'twitter_main/post_tweet.html' %}
+
+        <main id="tweets">
+            
+        </main>
+
+        <button id="getAllTweets">Load all</button>
+    </div>
+
 
     <script>
         const host  = 'localhost:8000/';
@@ -24,10 +26,13 @@
         const tweetContainer = document.querySelector('#tweets');
         const tweetForm = document.querySelector('#tweet_form');
         const tweetTextInput = document.querySelector('#id_tweet_text');
+        const getAllTweetsButton = document.querySelector('#getAllTweets');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            getData('get_tweets/2');
-        })
+        window.onload = () => getData('get_tweets/2');
+
+        getAllTweetsButton.addEventListener('click', () => {
+            getData('get_tweets');
+        });
 
         async function getData(resource) {
             
